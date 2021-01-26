@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Start the API in this file. 
+"""Start the API in this file
 Register the blueprint and execute the application"""
 from os import getenv
 from models import storage
@@ -7,6 +7,7 @@ from flask import Flask, Blueprint, jsonify, make_response
 from api.v1.views import app_views
 app = Flask(__name__)
 app.register_blueprint(app_views)
+
 
 @app.teardown_appcontext
 def teardown(exception):
