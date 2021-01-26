@@ -154,8 +154,14 @@ EOF  all  create  destroy  help  quit  show  update
 No known bugs at this time. 
 
 ## Authors
+CodeBase:
 Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
+
+AirBnB_clone_v3 Authors:
+Jasmine Choi -[Github] (https://github.com/jashjchoi)
+Osama Basheer - [Github](https://github.com/BigObasheer)
+
 
 Second part of Airbnb: Joann Vuong
 ## License
