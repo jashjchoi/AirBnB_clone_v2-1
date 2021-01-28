@@ -10,10 +10,7 @@ from api.v1.views import app_views
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users():
     """Display all users"""
-    obj_dict = []
-    for obj in storage.all(User).values():
-        obj_dict.append(obj.to_dict())
-    return make_response(jsonify(obj_dict), 200)
+    return jsonify([user.to_dict() for user in storage.all(User).values()])
 
 
 @app_views.route('/users/<user_id>', methods=['GET'],
@@ -22,9 +19,8 @@ def get_userid(user_id):
     """Display users by user_id"""
     u_id = storage.get(User, user_id)
     if u_id is not None:
-        return make_response(jsonify(u_id.to_dict()), 200)
-    else:
-        abort(404)
+        return jsonify(u_id.to_dict())
+    abort(404)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'],
@@ -36,8 +32,7 @@ def del_user(user_id):
         storage.delete(u_id)
         storage.save()
         return make_response(jsonify({}), 200)
-    else:
-        abort(404)
+    abort(404)
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
