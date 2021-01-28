@@ -38,17 +38,14 @@ def del_user(user_id):
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def post_user():
     """Create a new User"""
-    req = request.get_json()
-    if req is None:
-        return make_response("Not a JSON", 400)
-    if req.get('email') is None:
-        return make_response("Missing email", 400)
-    if req.get('password') is None:
-        return make_response("Missing password", 400)
-    else:
-        new_user = User(**req)
-        storage.new(new_user)
-        storage.save()
+    if not request.get_json():
+        return make_response(jsonify({"error": "Not a JSON"}), 400)
+    if request.get_json().get('email') is None:
+        return make_response(jsonify({"Missing email"}), 400)
+    if request.get_json().get('password') is None:
+        return make_response(jsonify({"Missing password"}), 400)
+    new_user = User(**request.get_json())
+    new_user.save()
     return make_response(jsonify(new_user.to_dict()), 201)
 
 
