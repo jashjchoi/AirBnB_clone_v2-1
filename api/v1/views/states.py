@@ -13,7 +13,11 @@ def get_states():
         list_states = []
         for state in storage.all(State).values():
             list_states.append(state.to_dict())
+<<<<<<< HEAD
         return make_response(jsonify(list_states), 200)
+=======
+            return make_response(jsonify(list_states), 200)
+>>>>>>> parent of c229c44... Debugging task 7. Update ignore keys for PUT method
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
