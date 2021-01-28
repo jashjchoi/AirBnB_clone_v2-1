@@ -22,9 +22,8 @@ def get_userid(user_id):
     """Display users by user_id"""
     u_id = storage.get(User, user_id)
     if u_id is not None:
-        return make_response(jsonify(u_id.to_dict()), 200)
-    else:
-        abort(404)
+        return jsonify(u_id.to_dict())
+    abort(404)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'],
@@ -36,24 +35,22 @@ def del_user(user_id):
         storage.delete(u_id)
         storage.save()
         return make_response(jsonify({}), 200)
-    else:
-        abort(404)
+    abort(404)
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def post_user():
     """Create a new User"""
     req = request.get_json()
-    if req is None:
+    if not req:
         return make_response("Not a JSON", 400)
-    if req.get('email') is None:
+    if 'email' not in req:
         return make_response("Missing email", 400)
-    if req.get('password') is None:
+    if 'password' not in req:
         return make_response("Missing password", 400)
-    else:
-        new_user = User(**req)
-        storage.new(new_user)
-        storage.save()
+    new_user = User(**req.get_json())
+    storage.new(new_user)
+    storage.save()
     return make_response(jsonify(new_user.to_dict()), 201)
 
 
@@ -68,7 +65,7 @@ def put_user(user_id):
     if not req:
         return make_response(jsonify({"error": "Not a JSON"}), 400)
     for key, val in request.get_json().items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(obj_user, key, val)
     storage.save()
     return make_response(jsonify(obj_user.to_dict()), 200)
