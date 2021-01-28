@@ -22,8 +22,9 @@ def get_userid(user_id):
     """Display users by user_id"""
     u_id = storage.get(User, user_id)
     if u_id is not None:
-        return jsonify(u_id.to_dict())
-    abort(404)
+        return make_response(jsonify(u_id.to_dict()), 200)
+    else:
+        abort(404)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'],
@@ -35,22 +36,24 @@ def del_user(user_id):
         storage.delete(u_id)
         storage.save()
         return make_response(jsonify({}), 200)
-    abort(404)
+    else:
+        abort(404)
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def post_user():
     """Create a new User"""
     req = request.get_json()
-    if not req:
+    if req is None:
         return make_response("Not a JSON", 400)
-    if 'email' not in req:
+    if req.get('email') is None:
         return make_response("Missing email", 400)
-    if 'password' not in req:
+    if req.get('password') is None:
         return make_response("Missing password", 400)
-    new_user = User(**req.get_json())
-    storage.new(new_user)
-    storage.save()
+    else:
+        new_user = User(**req)
+        storage.new(new_user)
+        storage.save()
     return make_response(jsonify(new_user.to_dict()), 201)
 
 
