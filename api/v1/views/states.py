@@ -29,9 +29,9 @@ def get_state(state_id):
                  strict_slashes=False)
 def delete_state(state_id):
     """Delete a State by state_id"""
-    st_id = storage.get(State, state_id)
-    if st_id is not None:
-        storage.delete(st_id)
+    state_id = storage.get(State, state_id)
+    if state_id is not None:
+        storage.delete(state_id)
         storage.save()
         return make_response(jsonify({}), 200)
     abort(404)
