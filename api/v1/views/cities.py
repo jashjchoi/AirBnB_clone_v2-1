@@ -4,7 +4,7 @@ from models.city import City
 from models.state import State
 from models import storage
 from api.v1.views import app_views
-from flask import request, abort, jsonify
+from flask import request, abort, jsonify, make_response
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
@@ -57,6 +57,8 @@ def post_city(state_id):
     return make_response(jsonify(instance.to_dict()), 201)
 
 
+@app_views.route('/cities/<city_id>/', methods=['PUT'],
+                 strict_slashes=False)
 def put_city(city_id):
     """ Updates a city """
     city = storage.get(City, city_id)
