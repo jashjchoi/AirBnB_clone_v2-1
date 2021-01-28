@@ -9,11 +9,10 @@ from api.v1.views import app_views
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_states():
     """ Retrieves the list of all State objects """
-    if request.method == "GET":
-        list_states = []
-        for state in storage.all(State).values():
-            list_states.append(state.to_dict())
-            return make_response(jsonify(list_states), 200)
+    list_states = []
+    for state in storage.all("State").values():
+        list_states.append(state.to_dict())
+    return jsonify(list_states)
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -55,10 +54,12 @@ def post_state():
 def put_state(state_id):
     """ Retrieves the list of all State objects """
     state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
     if not request.get_json():
-        return make_response(jsonify({"error": "Not a JSON"}), 400)
+        return make_response("Not a JSON"), 400)
     for k, v in request.get_json().items():
-        setattr(state, k, v)
-        storage.save()
-        return make_response(jsonify(state.to_dict()), 200)
-    abort(404)
+        if key not in ["id", "created_at", "updated_at"]:
+            setattr(state, k, v)
+    storage.save()
+    return make_response(jsonify(state.to_dict()), 200)
