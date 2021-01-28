@@ -10,7 +10,10 @@ from api.v1.views import app_views
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users():
     """Display all users"""
-    return jsonify([user.to_dict() for user in storage.all(User).values()])
+    obj_dict = []
+    for obj in storage.all(User).values():
+        obj_dict.append(obj.to_dict())
+    return make_response(jsonify(obj_dict), 200)
 
 
 @app_views.route('/users/<user_id>', methods=['GET'],
@@ -19,8 +22,9 @@ def get_userid(user_id):
     """Display users by user_id"""
     u_id = storage.get(User, user_id)
     if u_id is not None:
-        return jsonify(u_id.to_dict())
-    abort(404)
+        return make_response(jsonify(u_id.to_dict()), 200)
+    else:
+        abort(404)
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'],
@@ -32,20 +36,24 @@ def del_user(user_id):
         storage.delete(u_id)
         storage.save()
         return make_response(jsonify({}), 200)
-    abort(404)
+    else:
+        abort(404)
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def post_user():
     """Create a new User"""
-    if not request.get_json():
-        return make_response(jsonify({"error": "Not a JSON"}), 400)
-    if request.get_json().get('email') is None:
-        return make_response(jsonify({"Missing email"}), 400)
-    if request.get_json().get('password') is None:
-        return make_response(jsonify({"Missing password"}), 400)
-    new_user = User(**request.get_json())
-    new_user.save()
+    req = request.get_json()
+    if req is None:
+        return make_response("Not a JSON", 400)
+    if req.get('email') is None:
+        return make_response("Missing email", 400)
+    if req.get('password') is None:
+        return make_response("Missing password", 400)
+    else:
+        new_user = User(**req)
+        storage.new(new_user)
+        storage.save()
     return make_response(jsonify(new_user.to_dict()), 201)
 
 
