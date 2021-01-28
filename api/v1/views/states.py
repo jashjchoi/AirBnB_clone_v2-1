@@ -55,10 +55,12 @@ def post_state():
 def put_state(state_id):
     """ Retrieves the list of all State objects """
     state = storage.get(State, state_id)
+    if not state:
+        abort(404)
     if not request.get_json():
         return make_response(jsonify({"error": "Not a JSON"}), 400)
     for k, v in request.get_json().items():
-        setattr(state, k, v)
-        storage.save()
-        return make_response(jsonify(state.to_dict()), 200)
-    abort(404)
+	if k not in ['id', 'created_at', 'updated_at']
+        	setattr(state, k, v)
+    storage.save()
+    return make_response(jsonify(state.to_dict()), 200)
