@@ -49,7 +49,7 @@ def post_review(place_id):
         abort(404)
     req = request.get_json()
     if not req:
-        return make_respoEnse("Not a JSON", 400)
+        return make_response("Not a JSON", 400)
     u_id = storage.get(User, req['user_id'])
     if not u_id:
         abort(404)
