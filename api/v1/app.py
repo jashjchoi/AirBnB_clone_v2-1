@@ -15,7 +15,7 @@ cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 @app.teardown_appcontext
 def teardown(exception):
     """close the storage"""
-    storage.close()
+    return storage.close()
 
 
 @app.errorhandler(404)
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     host = getenv('HBNB_API_HOST')
     port = getenv('HBNB_API_PORT')
     if not host:
-        h = "0.0.0.0"
+        h = '0.0.0.0'
     if not p:
-        p = 5000
-    app.run(host=h, port=p, threaded=True)
+        p =' 5000'
+    app.run(host=host, port=port, threaded=True)
