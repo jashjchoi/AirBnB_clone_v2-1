@@ -91,13 +91,6 @@ class TestFileStorage(unittest.TestCase):
 class test_AnB_v3(unittest.TestCase):
     """Test the v3 api methods"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_class(cls):
-        """test create method"""
-        cls.new_state = State(name="OKlahoma")
-        cls.new_city = City(name="Tulsa", state_id=cls.new_state.id)
-        cls.new_state.save()
-        cls.new_city.save()
-
     def test_get_all(self):
         first_state_id = list(models.storage.all(State).values())[0].id
         new_obj = storage.get("State", first_state_id)
@@ -105,9 +98,11 @@ class test_AnB_v3(unittest.TestCase):
         self.assertTrue(new_obj.__class__.__name__, "State")
         self.assertTrue(new_obj.id, first_state_id)
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_return_dict(self):
         self.assertIs(type(models.storage.all()), dict)
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_no_id(self):
         first_state_id = None
         self.assertTrue("{}".format(storage.get("State",
