@@ -4,9 +4,12 @@ Register the blueprint and execute the application"""
 from os import getenv
 from models import storage
 from flask import Flask, Blueprint, jsonify
+from flask_cors import CORS
 from api.v1.views import app_views
+
 app = Flask(__name__)
 app.register_blueprint(app_views)
+cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 
 @app.teardown_appcontext
@@ -22,5 +25,10 @@ def not_found_404(err):
 
 
 if __name__ == "__main__":
-    app.run(host=getenv('HBNB_API_HOST', '0.0.0.0'),
-            port=getenv('HBNB_API_PORT', '5000'), threaded=True)
+    host = getenv('HBNB_API_HOST')
+    port = getenv('HBNB_API_PORT')
+    if not host:
+        h = "0.0.0.0"
+    if not p:
+        p = 5000
+    app.run(host=h, port=p, threaded=True)
